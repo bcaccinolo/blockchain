@@ -1,17 +1,17 @@
 
 
-// class Block {
+class Block {
 
-//   constructor(id, date, data) {
-//     console.log('creation of a block');
-//     this.id = id;
-//     this.date = date;
-//     this.data = data;
-//   }
+  constructor(id, date, data) {
+    console.log('creation of a block');
+    this.id = id;
+    this.date = date;
+    this.data = data;
+  }
 
-// }
+}
 
-// block = new Block(1, "12/12/12", "new block");
+block = new Block(1, "12/12/12", "new block");
 
 // console.log(block);
 
@@ -136,13 +136,30 @@ console.log(chain.blocks[1]);
 
 chain.blocks[1].data = {transaction:1000}
 
-// que se passe-t-il si une donné d'un bock est modifié est qu'en plus
+// que se passe-t-il si une donnée d'un bock est modifiée est qu'en plus
 // le hash est recalculé ? on se retrouve avec un block valide !
 
 // C'est là qu'arrive tout l'intéret d'avoir le hash du bloc
 // précédent. Ainsi on peut le comparer et valider que ce derner est
-// validet ou pas.
+// valide ou pas.
 
 // Il faut donc mettre a jour la mehtode de calcul de validité en
 // regardant le hash contenu dans le block suivant.
+
+
+
+qu'est ce qu'on doit valider?
+
+je ne sais plus en fait
+
+
+
+## miner c'est quoi ?
+
+c'est un système qui permet de valider que les données du
+
+
+mettre en début une explication sur qu'est une blockchain? C'est un grand livre
+comptable qui liste toutes les transactions faites dans un ordre chronologique.
+la BlockChain sert à confirmer les transactions.
 

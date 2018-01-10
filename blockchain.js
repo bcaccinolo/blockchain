@@ -1,165 +1,116 @@
 
-
-class Block {
-
-  constructor(id, date, data) {
-    console.log('creation of a block');
-    this.id = id;
-    this.date = date;
-    this.data = data;
-  }
-
-}
-
-block = new Block(1, "12/12/12", "new block");
-
-// console.log(block);
-
-
-// this is a basic block for now.
-// maintenant nous avons d'un moyen de valider les données.
-// Ainsi si une données est modifiée, il est possible de vérifier la validité du block.
-// Pour se faire nous allons mettre en place un Hash, Un hash, est une empreinte unique
-// des données fournie en entrée.
-// Ajoutons donc la propriété `hash` à notre block. Pour se faire, nous allons installer
-// la librairie crypto-js pour cela.
-
-// ```
-// npm install --save crypto-js
-// ```
-
-
-// var SHA256 = require("crypto-js/sha256");
-
-// class Block {
-
-//   constructor(id, date, data) {
-//     console.log('creation of a block');
-//     this.id = id;
-//     this.date = date;
-//     this.data = data;
-//     this.hash = this.generateHash();
-//   }
-
-//   generateHash() {
-//     return SHA256(this.id + this.date + this.data ).toString();
-//   }
-
-//   isValid() {
-//     return this.hash === this.generateHash();
-//   }
-// }
-
-
-// ====================================
-
-// Maintenant nous avons un block sécurisé en quelque sorte.
-
-// Si une donnée est modifiée, il nous est possible de valider si le
-// block est corrompu ou non. Pour se faier, nous avbons mis en place
-// une fonction de lvalidation dqui va nous permietter de valider xu
-// lel balock est validaett ou non.
-
-// block = new Block(1, "12/12/12", "new block");
-// console.log(block);
-// console.log(block.isValid());
-
-// // je le modifie
-// block.date = "12/01/98";
-// console.log(block);
-
-// console.log(block.isValid());
-
-
-// Maintenant que nous avons un block, il est temps de passer
-// a la chaine...
-
-// Pour se faire, chaque block contient le hash du block précédent.
-// Il va donc falloir mettre à jour la structure de notre block pour recevroi
-// la hash du block préc´dentt de la chaine.
-
 var SHA256 = require("crypto-js/sha256");
 
 class Block {
 
-  constructor(id, date, data, previousHash) {
+  constructor(index, timeStamp, data, previousHash, hash) {
     console.log('creation of a block');
-    this.id = id;
-    this.date = date;
+    this.index = index;
+    this.timeStamp = timeStamp;
     this.data = data;
     this.previousHash = previousHash;
-    this.hash = this.generateHash();
+    this.nonce = 0;
+    this.hash = this.calculateHash();
   }
 
-  generateHash() {
-    return SHA256(this.id + this.date + this.data ).toString();
+  calculateHash() {
+    return SHA256(this.index + this.timeStamp + this.data + this.previousHash + this.nonce).toString();
   }
 
-  isValid() {
-    return this.hash === this.generateHash();
+  solveProofOfWork(difficulty = 4) {
+    this.nonce = 0;
+    while (true) {
+        this.hash = this.calculateHash();
+        let valid = this.hash.slice(0, difficulty);
+
+        if (valid === Array(difficulty + 1).join('0')) {
+            console.log(this);
+            return true;
+        }
+        this.nonce = this.nonce + 1;
+    }
   }
+
 }
 
-// Une chaine doit contenir un premier black appelé 'genesis'
 
 class BlockChain {
 
   constructor() {
-    this.blocks = [this.createGenesis()];
+    this.blocks = [];
+    this.createGenesisBlock();
   }
 
-  createGenesis() {
-    return new Block(0, '01/01/01', {}, '');
+  createGenesisBlock() {
+    let timeStamp = new Date().getTime();
+    this.blocks.push(new Block(0, timeStamp, "Genesis Block", null));
   }
 
-  addBlock(date, data) {
-    var lastBlock = this.blocks[this.blocks.length - 1];
-    var lastIndex = lastBlock.id;
-    var lastHash = lastBlock.hash;
-    var newBlock = new Block(lastIndex+1, date, data, lastHash);
-    this.blocks.push(newBlock);
+  getLatestBlock() {
+    return this.blocks[this.blocks.length - 1];
+  }
+
+  generateNextBlock(blockData) {
+    let previousBlock = this.getLatestBlock();
+    let nextIndex = previousBlock.index + 1;
+    let nextDate = new Date().getTime();
+    let newBlock = new Block(nextIndex, nextDate, blockData, previousBlock.hash);
+    return newBlock;
+  }
+
+  isValidNewBlock(newBlock, previousBlock) {
+    if (previousBlock.index + 1 !== newBlock.index) {
+        console.log('invalid index', newBlock);
+        return false;
+    } else if (previousBlock.hash !== newBlock.previousHash) {
+        console.log('invalid previoushash', newBlock);
+        return false;
+    } else if (newBlock.calculateHash() !== newBlock.hash) {
+        console.log(typeof (newBlock.hash) + ' ' + typeof newBlock.calculateHash());
+        console.log('invalid hash: ' + newBlock.calculateHash() + ' ' + newBlock.hash);
+        return false;
+    }
+    return true;
+  }
+
+  isValidGenesisBlock() {
+    let genesisBlock = this.blocks[0];
+
+    if (genesisBlock.index === '0') {
+        console.log('invalid index', genesisBlock);
+        return false;
+    } else if (genesisBlock.previousHash === 'null') {
+        console.log('invalid previoushash', genesisBlock);
+        return false;
+    } else if (genesisBlock.calculateHash() !== genesisBlock.hash) {
+        console.log('invalid hash: ' + genesisBlock.calculateHash() + ' ' + genesisBlock.hash);
+        return false;
+    }
+    return true;
+  }
+
+  isValidChain() {
+    if (!this.isValidGenesisBlock(this.blocks[0])) {
+        return false;
+    }
+
+    for (let i = 1; i < this.blocks.length; i++) {
+        if (!this.isValidNewBlock(this.blocks[i], this.blocks[i - 1])) {
+            return false;
+        }
+    }
+    return true;
   }
 
 }
 
-chain = new BlockChain();
+blockchain = new BlockChain();
 
-chain.addBlock('12/12/12', {transaction:100});
-chain.addBlock('01/12/15', {transaction:100});
+blockchain.blocks.push(blockchain.generateNextBlock({transfert: 100}));
+blockchain.blocks.push(blockchain.generateNextBlock({transfert: 20}));
 
-console.log(chain);
-console.log(chain.blocks[1]);
+console.log(blockchain.blocks);
+console.log(blockchain.isValidChain());
 
-
-// bien maintenant que se pase t il si un block est corrompu ?
-// je me fais un versement 10 fois supérieur!
-
-chain.blocks[1].data = {transaction:1000}
-
-// que se passe-t-il si une donnée d'un bock est modifiée est qu'en plus
-// le hash est recalculé ? on se retrouve avec un block valide !
-
-// C'est là qu'arrive tout l'intéret d'avoir le hash du bloc
-// précédent. Ainsi on peut le comparer et valider que ce derner est
-// valide ou pas.
-
-// Il faut donc mettre a jour la mehtode de calcul de validité en
-// regardant le hash contenu dans le block suivant.
-
-
-
-qu'est ce qu'on doit valider?
-
-je ne sais plus en fait
-
-
-
-## miner c'est quoi ?
-
-c'est un système qui permet de valider que les données du
-
-
-mettre en début une explication sur qu'est une blockchain? C'est un grand livre
-comptable qui liste toutes les transactions faites dans un ordre chronologique.
-la BlockChain sert à confirmer les transactions.
-
+let block = blockchain.blocks[2];
+block.solveProofOfWork();

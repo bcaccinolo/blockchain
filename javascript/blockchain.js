@@ -16,7 +16,7 @@ class Block {
     return SHA256(this.index + this.timeStamp + this.data + this.previousHash + this.nonce).toString();
   }
 
-  solveProofOfWork(difficulty = 5) {
+  solveProofOfWork(difficulty = 4) {
     this.nonce = 0;
     while (true) {
       this.hash = this.calculateHash();

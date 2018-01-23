@@ -2,7 +2,9 @@
 
 ## Todo
 
--> add /addBlock
+-> set the ExpressJS in place.
+
+- add /addBlock
   add the block to the existing blockchain
 
 - add the /addPeer call
@@ -18,4 +20,6 @@
         res.send(getBlockchain());
     });
 
+
+# Usage
 

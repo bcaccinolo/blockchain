@@ -2,10 +2,10 @@
 
 ## Todo
 
--> set the ExpressJS in place.
+- DONE set the ExpressJS in place.
 
-- add /addBlock
-  add the block to the existing blockchain
+-> add /addBlock
+   add the block to the existing blockchain
 
 - add the /addPeer call
     app.post('/addPeer', (req, res) => {
@@ -20,6 +20,19 @@
         res.send(getBlockchain());
     });
 
+# In development
+
+Install Nodeman (https://nodemon.io/)
+```
+npm install -g nodemon
+```
+
+```
+nodemon app.js 3000
+```
 
 # Usage
 
+```
+node app.js 3000
+```

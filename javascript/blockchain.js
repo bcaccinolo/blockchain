@@ -21,6 +21,7 @@ var BlockChain = class {
     const nextIndex = previousBlock.index + 1;
     const nextDate = new Date().getTime();
     const newBlock = new Block(nextIndex, nextDate, blockData, previousBlock.hash);
+    newBlock.solveProofOfWork();
     return newBlock;
   }
 

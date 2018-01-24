@@ -3,25 +3,18 @@
 ## Todo
 
 - DONE set the ExpressJS in place.
+- DONE list blocks
+- DONE add /addTransaction
+       add the block to the existing blockchain
+- DONE add /isBlockChainValid
 
--> add /addBlock
-   add the block to the existing blockchain
-
-- add the /addPeer call
-    app.post('/addPeer', (req, res) => {
-        connectToPeers(req.body.peer);
-        res.send();
-    });
+-> add the /addPeer using the P2P lib
 
 - add the /listPeers
 
-- add 'get all blocks'
-    app.get('/blocks', (req, res) => {
-        res.send(getBlockchain());
-    });
+- look at the consensus problem
 
 # In development
-
 Install Nodeman (https://nodemon.io/)
 ```
 npm install -g nodemon

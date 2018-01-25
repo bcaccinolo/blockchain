@@ -20,7 +20,7 @@ blockchain.blocks.push(blockchain.generateNextBlock({transfert: 20}));
 
 app.get('/', (req, res) => {
   console.log(app._router.stack);
-  const urls = [ '/listBlocks', '/addTransaction', '/isBockchainValid', '/addPeer', '/listPeers']
+  const urls = [ '/listBlocks', '/addTransaction', '/isBockchainValid', '/addPeer', '/listPeers', '/peerBlocks' ]
   res.render('index', { urls: urls })
 })
 
@@ -59,9 +59,17 @@ app.get('/addPeer', function(req, res) {
 
 app.get('/listPeers', function(req, res) {
   let urls =  p2p.listPeers()
-  console.log(urls);
+  res.render('listPeers', { urls: p2p.listPeers() })
+})
 
-    res.render('listPeers', { urls: p2p.listPeers() })
+app.get('/peerBlocks', function(req, res) {
+
+  if (param_length === 0) {
+    res.render('addPeer')
+  } else {
+
+    res.render('addPeer')
+  }
 })
 
 app.listen(web_server_port);

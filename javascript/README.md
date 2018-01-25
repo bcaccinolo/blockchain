@@ -12,6 +12,8 @@
 - DONE in p2p.js. store the correct url info about the peers. We don't get all the data
        on the Server side.
 
+-> get blocks from another peers
+
 -> look at the consensus problem
 
 - the p2p.js has been updated to it should be ported back to the p2pchat repo.

@@ -4,7 +4,9 @@
 </h3>
 
 <ul>
-  <% urls.forEach(function(url) { %>
-    <li><a href="<%= url %>"><%= url %></a></li>
+  <% urls.forEach(function(url, index) { %>
+    <li>
+      <h3><%= index %></h3>
+      <a href="<%= url %>"><%= url %></a></li>
   <% }) %>
 </ul>

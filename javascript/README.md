@@ -8,10 +8,11 @@
        add the block to the existing blockchain
 - DONE add /isBlockChainValid
 - DONE add the /addPeer using the P2P lib
+- DONE add the /listPeers
+- DONE in p2p.js. store the correct url info about the peers. We don't get all the data
+       on the Server side.
 
--> add the /listPeers
-
-- look at the consensus problem
+-> look at the consensus problem
 
 - the p2p.js has been updated to it should be ported back to the p2pchat repo.
 

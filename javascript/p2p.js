@@ -30,6 +30,15 @@ class P2P {
     });
   }
 
+  listPeers() {
+    let urls = this.sockets.map((socket) => {
+      console.log(socket);
+
+      return socket.url
+    })
+    return urls
+  }
+
   addSocket(ws) {
     ws.send(this.createMessage({type: 'message', data: "ok i added you"}));
     ws.on('close', () => {
@@ -62,6 +71,9 @@ class P2P {
     console.log('Received message: ', message);
 
     let json = JSON.parse(message);
+
+    ws.url = "ws:://localhost:" + json.from
+    console.log('the url is ', ws.url);
 
     // New Peer Broadcast
     if (json.type === 'newPeerBroadcast') {

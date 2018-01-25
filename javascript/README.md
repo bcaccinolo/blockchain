@@ -7,12 +7,13 @@
 - DONE add /addTransaction
        add the block to the existing blockchain
 - DONE add /isBlockChainValid
+- DONE add the /addPeer using the P2P lib
 
--> add the /addPeer using the P2P lib
-
-- add the /listPeers
+-> add the /listPeers
 
 - look at the consensus problem
+
+- the p2p.js has been updated to it should be ported back to the p2pchat repo.
 
 # In development
 Install Nodeman (https://nodemon.io/)

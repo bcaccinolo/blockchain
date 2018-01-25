@@ -1,13 +1,17 @@
 const { Block } =  require('./block')
 const { BlockChain } = require('./blockchain')
+const { P2P } = require('./p2p')
+
+// Command line: Connection ports
+const ws_server_port = process.argv[2]
+const web_server_port = Number(ws_server_port) + 1
 
 const app = require('express')()
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
-// Connection ports
-const ws_server_port = process.argv[2]
-const web_server_port = Number(ws_server_port) + 1
+const p2p = new P2P(ws_server_port)
+p2p.createServer();
 
 // Blockchain initialization
 var blockchain = new BlockChain();
@@ -16,7 +20,8 @@ blockchain.blocks.push(blockchain.generateNextBlock({transfert: 20}));
 
 app.get('/', (req, res) => {
   console.log(app._router.stack);
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
+  const urls = [ '/listBlocks', '/addTransaction', '/isBockchainValid', '/addPeer' ]
+  res.render('index', { urls: urls })
 })
 
 app.get('/listBlocks', (req, res) => {
@@ -39,6 +44,17 @@ app.get('/addTransaction', (req, res) => {
 
 app.get('/isBockchainValid', (req, res) => {
   res.render('isBlockchainValid', { validity: blockchain.isValidChain() })
+})
+
+app.get('/addPeer', function(req, res) {
+  const param_length = Object.keys(req.query).length;
+
+  if (param_length === 0) {
+    res.render('addPeer')
+  } else {
+    p2p.newConnection(req.query.port);
+    res.render('addPeer')
+  }
 })
 
 app.listen(web_server_port);

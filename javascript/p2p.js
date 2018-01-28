@@ -75,6 +75,12 @@ class P2P {
     ws.url = "ws:://localhost:" + json.from
     console.log('the url is ', ws.url);
 
+
+    // Return blocks
+    if (json.type === 'sendBlocks') {
+      ws.send(this.createMessage({type: 'message', data: 'sending blocks'}));
+    }
+
     // New Peer Broadcast
     if (json.type === 'newPeerBroadcast') {
       this.sockets.forEach((socket) => {

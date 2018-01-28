@@ -13,6 +13,7 @@
        on the Server side.
 
 -> get blocks from another peers
+    >> update p2p.js directly addiing comment about the fact it coulb factorize.
 
 -> look at the consensus problem
 

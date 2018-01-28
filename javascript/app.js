@@ -63,11 +63,11 @@ app.get('/listPeers', function(req, res) {
 })
 
 app.get('/peerBlocks', function(req, res) {
+  const param_length = Object.keys(req.query).length;
 
   if (param_length === 0) {
     res.render('addPeer')
   } else {
-
     res.render('addPeer')
   }
 })

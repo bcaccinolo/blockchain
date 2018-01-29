@@ -14,9 +14,9 @@ const p2p = new P2P(ws_server_port)
 p2p.createServer();
 
 // Blockchain initialization
-var blockchain = new BlockChain();
-blockchain.blocks.push(blockchain.generateNextBlock({transfert: 100}));
-blockchain.blocks.push(blockchain.generateNextBlock({transfert: 20}));
+p2p.blockchain = new BlockChain();
+p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock({transfert: 100}));
+p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock({transfert: 20}));
 
 app.get('/', (req, res) => {
   console.log(app._router.stack);
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/listBlocks', (req, res) => {
-  res.render('listBlocks', { blocks: blockchain.blocks })
+  res.render('listBlocks', { blocks: p2p.blockchain.blocks })
 })
 
 app.get('/addTransaction', (req, res) => {
@@ -33,17 +33,17 @@ app.get('/addTransaction', (req, res) => {
 
   const param_length = Object.keys(req.query).length;
   if (param_length === 0) {
-    res.render('addTransaction', { blocks: blockchain.blocks })
+    res.render('addTransaction', { blocks: p2p.blockchain.blocks })
   } else {
     console.log(req.query);
     const transaction = req.query;
-    blockchain.blocks.push(blockchain.generateNextBlock(transaction));
-    res.render('listBlocks', { blocks: blockchain.blocks })
+    p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock(transaction));
+    res.render('listBlocks', { blocks: p2p.blockchain.blocks })
   }
 })
 
 app.get('/isBockchainValid', (req, res) => {
-  res.render('isBlockchainValid', { validity: blockchain.isValidChain() })
+  res.render('isBlockchainValid', { validity: p2p.blockchain.isValidChain() })
 })
 
 app.get('/addPeer', function(req, res) {

@@ -71,6 +71,25 @@ var BlockChain = class {
     }
     return true;
   }
+
+  resolveConsensus(externalBlockchain) {
+    console.log('resolving consensus');
+
+    if (externalBlockchain.isValidChain() === false) {
+      return false
+    }
+
+    var currentLength = this.blocks.length;
+    var newLength = externalBlockchain.blocks.length;
+    if (newLength > currentLength) {
+      console.log('ok to replace');
+      this.blocks = externalBlockchain.blocks;
+    } else {
+      console.log('we keep the existing one');
+    }
+
+  }
+
 }
 
 module.exports = { BlockChain }

@@ -65,10 +65,16 @@ app.get('/listPeers', function(req, res) {
 app.get('/peerBlocks', function(req, res) {
   const param_length = Object.keys(req.query).length;
 
-  if (param_length === 0) {
-    res.render('addPeer')
+  if (param_length !== 0) {
+    var index = req.query.peerId;
+    var socket = p2p.sockets[index];
+    r = socket.send(p2p.createMessage({type: 'sendBlocks', data: "give me the blocks"}));
+
+    console.log(r);
+
+    res.render('peerBlocks')
   } else {
-    res.render('addPeer')
+    res.render('peerBlocks')
   }
 })
 

@@ -1,4 +1,6 @@
-const WebSocket = require('ws');
+const WebSocket = require('ws')
+const { Block } =  require('./block')
+const { BlockChain } = require('./blockchain')
 
 // P2P class
 class P2P {
@@ -75,10 +77,29 @@ class P2P {
     ws.url = "ws:://localhost:" + json.from
     console.log('the url is ', ws.url);
 
-
-    // Return blocks
+    // Ask for blocks
     if (json.type === 'sendBlocks') {
-      ws.send(this.createMessage({type: 'message', data: 'sending blocks'}));
+      ws.send(this.createMessage({type: 'Blocks', data: this.blockchain.blocks}));
+    }
+
+    if (json.type === 'Blocks') {
+      var blocks = json.data;
+
+      // TODO: create a Blockchain class method to do this.
+      var list = blocks.map((block) => {
+        var bl = new Block(block.index, block.timeStamp, block.data, block.previousHash);
+        bl.nonce = block.nonce;
+        bl.hash = bl.calculateHash();
+        return bl;
+      })
+      console.log(list);
+
+      var newBlockChain = new BlockChain();
+      newBlockChain.blocks = list;
+      console.log(newBlockChain.isValidChain());
+
+      this.blockchain.resolveConsensus(newBlockChain);
+
     }
 
     // New Peer Broadcast

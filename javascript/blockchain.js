@@ -8,21 +8,49 @@ var BlockChain = class {
   }
 
   createGenesisBlock() {
-    const timeStamp = new Date().getTime();
-    this.blocks.push(new Block(0, timeStamp, "Genesis Block", null));
+    this.blocks.push(new Block(0, 0, "Genesis Block", null));
   }
 
-  getLatestBlock() {
+  getLastBlock() {
     return this.blocks[this.blocks.length - 1];
   }
 
   generateNextBlock(blockData) {
-    const previousBlock = this.getLatestBlock();
+    const previousBlock = this.getLastBlock();
     const nextIndex = previousBlock.index + 1;
     const nextDate = new Date().getTime();
     const newBlock = new Block(nextIndex, nextDate, blockData, previousBlock.hash);
     newBlock.solveProofOfWork();
     return newBlock;
+  }
+
+  addNewBlock(newBlock) {
+    console.log('ready to add the new block');
+    var lastBlock = this.getLastBlock();
+
+    console.log('last block', lastBlock);
+    console.log('new block', newBlock);
+
+    var lastBlockIndex = parseInt(lastBlock.index);
+    var newBlockIndex = parseInt(newBlock.index);
+
+    console.log(newBlockIndex);
+    console.log(lastBlockIndex + 1);
+
+    if(newBlockIndex === lastBlockIndex + 1) {
+      console.log('the index is ok we can insert it ');
+
+      if (this.isValidNewBlock(newBlock, lastBlock)) {
+        this.blocks.push(newBlock);
+        console.log('new block added');
+      }
+
+
+    } else if(newBlockIndex > lastBlockIndex) {
+      console.log('the index is too high, we need to refresh the blockchain');
+    } else if(newBlockIndex < lastBlockIndex) {
+      console.log('the index looks weird, I dont do anything');
+    }
   }
 
   isValidNewBlock(newBlock, previousBlock) {
@@ -38,6 +66,8 @@ var BlockChain = class {
       console.log('invalid hash: ' + newBlock.calculateHash() + ' ' + newBlock.hash);
       return false;
     }
+    console.log('new block is valid');
+
     return true;
   }
 

@@ -12,11 +12,7 @@ app.set('view engine', 'ejs')
 
 const p2p = new P2P(ws_server_port)
 p2p.createServer();
-
-// Blockchain initialization
 p2p.blockchain = new BlockChain();
-p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock({transfert: 100}));
-p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock({transfert: 20}));
 
 app.get('/', (req, res) => {
   console.log(app._router.stack);
@@ -38,6 +34,7 @@ app.get('/addTransaction', (req, res) => {
     console.log(req.query);
     const transaction = req.query;
     p2p.blockchain.blocks.push(p2p.blockchain.generateNextBlock(transaction));
+    p2p.broadcast(p2p.createMessage({ type: 'newBlock', data: p2p.blockchain.getLastBlock() }))
     res.render('listBlocks', { blocks: p2p.blockchain.blocks })
   }
 })

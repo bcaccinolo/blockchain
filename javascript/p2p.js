@@ -62,9 +62,10 @@ class P2P {
     return JSON.stringify(json);
   }
 
-  sendMessage(message) {
+  // broadcasting message
+  broadcast(jsonMessage) {
     this.sockets.forEach((socket) => {
-      socket.send(this.createMessage({type: 'message', data: message}));
+      socket.send(jsonMessage);
     })
   }
 
@@ -82,7 +83,8 @@ class P2P {
       ws.send(this.createMessage({type: 'Blocks', data: this.blockchain.blocks}));
     }
 
-    if (json.type === 'Blocks') {
+    // you are receiving blocks from another peer
+    if (json.type === 'requestedBlocks') {
       var blocks = json.data;
 
       // TODO: create a Blockchain class method to do this.
@@ -99,8 +101,21 @@ class P2P {
       console.log(newBlockChain.isValidChain());
 
       this.blockchain.resolveConsensus(newBlockChain);
-
     }
+
+    // you are receiving one new generated block
+    if (json.type === 'newBlock') {
+      console.log('new block received');
+
+      // generating the new block
+      var json_block = json.data;
+      var block = new Block(json_block.index, json_block.timeStamp, json_block.data, json_block.previousHash);
+      block.nonce = json_block.nonce;
+      block.hash = block.calculateHash();
+
+      this.blockchain.addNewBlock(block);
+    }
+
 
     // New Peer Broadcast
     if (json.type === 'newPeerBroadcast') {

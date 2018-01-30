@@ -19,8 +19,9 @@ https://github.com/websockets/ws
 - DONE get blocks from another peers
 - DONE look at the consensus problem
 - DONE what to do when I add a new block? Is it broadcasted?
+- DONE adding a simple new block in best situation
 
--> the blockchain receives a new block what to do ?
+-> the node ask to get all the existing chains to get the longest
 
 - the p2p.js has been updated to it should be ported back to the p2pchat repo.
 

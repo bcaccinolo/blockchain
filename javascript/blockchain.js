@@ -39,17 +39,16 @@ var BlockChain = class {
 
     if(newBlockIndex === lastBlockIndex + 1) {
       console.log('the index is ok we can insert it ');
-
       if (this.isValidNewBlock(newBlock, lastBlock)) {
         this.blocks.push(newBlock);
         console.log('new block added');
       }
-
-
     } else if(newBlockIndex > lastBlockIndex) {
       console.log('the index is too high, we need to refresh the blockchain');
+      return 3;
     } else if(newBlockIndex < lastBlockIndex) {
       console.log('the index looks weird, I dont do anything');
+
     }
   }
 

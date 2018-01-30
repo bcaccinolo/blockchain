@@ -113,9 +113,11 @@ class P2P {
       block.nonce = json_block.nonce;
       block.hash = block.calculateHash();
 
-      this.blockchain.addNewBlock(block);
+      var res = this.blockchain.addNewBlock(block);
+      if (res === 3) {
+        console.log('asking for consensus');
+      }
     }
-
 
     // New Peer Broadcast
     if (json.type === 'newPeerBroadcast') {

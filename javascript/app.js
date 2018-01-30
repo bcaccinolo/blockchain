@@ -15,7 +15,6 @@ p2p.createServer();
 p2p.blockchain = new BlockChain();
 
 app.get('/', (req, res) => {
-  console.log(app._router.stack);
   const urls = [ '/listBlocks', '/addTransaction', '/isBockchainValid', '/addPeer', '/listPeers', '/peerBlocks' ]
   res.render('index', { urls: urls })
 })
@@ -59,6 +58,7 @@ app.get('/listPeers', function(req, res) {
   res.render('listPeers', { urls: p2p.listPeers() })
 })
 
+// you request the blocks of a given peer
 app.get('/peerBlocks', function(req, res) {
   const param_length = Object.keys(req.query).length;
 

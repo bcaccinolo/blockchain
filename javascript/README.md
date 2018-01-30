@@ -2,7 +2,6 @@
 
 https://github.com/websockets/ws/blob/master/doc/ws.md
 
-
 https://github.com/websockets/ws
 
 ## Todo
@@ -22,6 +21,8 @@ https://github.com/websockets/ws
 - DONE adding a simple new block in best situation
 
 -> the node ask to get all the existing chains to get the longest
+
+en fait il faut que p2p soit un objet global et l'affecter dans bc.p2p pour utilisation interne.
 
 - the p2p.js has been updated to it should be ported back to the p2pchat repo.
 

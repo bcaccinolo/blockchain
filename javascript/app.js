@@ -14,6 +14,58 @@ const p2p = new P2P(ws_server_port)
 p2p.createServer();
 p2p.blockchain = new BlockChain();
 
+// Webservices messages
+
+// ask to receive blocks from peer
+const messageSendBlocks = function(json, ws) {
+  ws.send(this.createMessage({type: 'Blocks', data: this.blockchain.blocks}));
+}
+p2p.messageFunctions['sendBlocks'] = messageSendBlocks.bind(p2p);
+
+// Blockchain: you are receiving blocks from another peer
+const messageRequestedBlocks = function(json,ws) {
+  const blocks = json.data;
+
+  // TODO: create a Blockchain class method to do this.
+  const list = blocks.map((block) => {
+    let bl = new Block(block.index, block.timeStamp, block.data, block.previousHash);
+    bl.nonce = block.nonce;
+    bl.hash = bl.calculateHash();
+    return bl;
+  })
+  console.log(list);
+
+  const newBlockChain = new BlockChain();
+  newBlockChain.blocks = list;
+  console.log(newBlockChain.isValidChain());
+
+  this.blockchain.resolveConsensus(newBlockChain);
+}
+
+p2p.messageFunctions['requestedBlocks'] = messageRequestedBlocks.bind(p2p);
+
+// Blockchain: you are receiving one new generated block
+const messageNewBlock = function(json, ws) {
+  console.log('new block received');
+
+  // generating the new block
+  var json_block = json.data;
+  var block = new Block(json_block.index, json_block.timeStamp, json_block.data, json_block.previousHash);
+  block.nonce = json_block.nonce;
+  block.hash = block.calculateHash();
+
+  var res = this.blockchain.addNewBlock(block);
+  if (res === 3) {
+    console.log('asking for consensus');
+  }
+}
+
+p2p.messageFunctions['newBlock'] = messageNewBlock.bind(p2p);
+
+
+
+// End Webservices messages
+
 app.get('/', (req, res) => {
   const urls = [ '/listBlocks', '/addTransaction', '/isBockchainValid', '/addPeer', '/listPeers', '/peerBlocks' ]
   res.render('index', { urls: urls })

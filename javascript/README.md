@@ -4,7 +4,7 @@ A blockchain in javascript with the implementation of a the Proof of Work (PoW) 
 
 It uses WebSockets to communicate with the other blockchains of its network.
 
-# It allors you to
+# It allows
 
 - /listBlocks : display the blocks of the blockchain.
 

@@ -9,13 +9,13 @@ const app = require('express')()
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
-const p2p = new P2P(webServerPort)
+const p2p = new P2P(wsServerPort)
 p2p.createServer()
 
 const blockchain = new BlockChain()
 blockchain.p2p = p2p
 
-// Webservices messages
+// Webservices messages for the Blockchain
 
 // A node requests the blocks of another node
 p2p.messageFunctions['sendBlocks'] = function(json, ws) {
@@ -48,7 +48,6 @@ app.get('/addTransaction', (req, res) => {
   if (paramLength === 0) {
     res.render('addTransaction', { blocks: blockchain.blocks })
   } else {
-    console.log(req.query)
     const transaction = req.query
     blockchain.blocks.push(blockchain.generateNextBlock(transaction))
     p2p.broadcast(p2p.createMessage({ type: 'newBlock', data: blockchain.getLastBlock() }))

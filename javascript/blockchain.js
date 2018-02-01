@@ -45,8 +45,6 @@ const BlockChain = class {
       console.log('invalid hash: ' + newBlock.calculateHash() + ' ' + newBlock.hash)
       return false
     }
-    console.log('new block is valid')
-
     return true
   }
 
@@ -109,7 +107,6 @@ const BlockChain = class {
   // Ask
   consensus() {
     this.p2p.sockets.forEach((socket) => {
-      console.log('requesting blocks')
       socket.send(this.p2p.createMessage({type: 'sendBlocks', data: ''}))
     })
   }
